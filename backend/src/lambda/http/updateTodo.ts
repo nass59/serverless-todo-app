@@ -1,4 +1,4 @@
-import 'source-map-support/register'
+/* import 'source-map-support/register'
 
 import {
   APIGatewayProxyEvent,
@@ -17,3 +17,4 @@ export const handler: APIGatewayProxyHandler = async (
   // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
   return undefined
 }
+ */

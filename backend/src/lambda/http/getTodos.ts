@@ -1,4 +1,4 @@
-import 'source-map-support/register'
+/* import 'source-map-support/register'
 
 import {
   APIGatewayProxyEvent,
@@ -11,3 +11,4 @@ export const handler: APIGatewayProxyHandler = async (
 ): Promise<APIGatewayProxyResult> => {
   // TODO: Get all TODO items for a current user
 }
+ */

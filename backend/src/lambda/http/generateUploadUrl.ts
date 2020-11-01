@@ -1,4 +1,4 @@
-import 'source-map-support/register'
+/* import 'source-map-support/register'
 
 import {
   APIGatewayProxyEvent,
@@ -14,3 +14,4 @@ export const handler: APIGatewayProxyHandler = async (
   // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
   return undefined
 }
+ */
