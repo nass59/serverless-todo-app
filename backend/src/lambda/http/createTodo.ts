@@ -6,8 +6,8 @@ import {
   APIGatewayProxyResult
 } from 'aws-lambda'
 
-import { createTodo } from '../../businessLogic/todos'
 import { createLogger } from '../../utils/logger'
+import { createTodo } from '../../businessLogic/todos'
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 
 const logger = createLogger('http-create-todo')
@@ -20,7 +20,7 @@ export const handler: APIGatewayProxyHandler = async (
   const userId = '123'
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
 
-  const newTodoItem = await createTodo(newTodo, userId)
+  const newTodoItem = await createTodo(userId, newTodo)
 
   return {
     statusCode: 201,

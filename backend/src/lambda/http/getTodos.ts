@@ -6,8 +6,8 @@ import {
   APIGatewayProxyHandler
 } from 'aws-lambda'
 
-import { getTodos } from '../../businessLogic/todos'
 import { createLogger } from '../../utils/logger'
+import { getTodos } from '../../businessLogic/todos'
 
 const logger = createLogger('http-get-todos')
 

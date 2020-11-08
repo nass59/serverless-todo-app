@@ -2,7 +2,9 @@ import * as uuid from 'uuid'
 
 import { TodoAccess } from '../dataLayer/todoAccess'
 import { TodoItem } from '../models/TodoItem'
+import { TodoUpdate } from '../models/TodoUpdate'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
+import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
 
 const todoAccess = new TodoAccess()
@@ -15,12 +17,12 @@ export async function getTodos(userId: string): Promise<TodoItem[]> {
 }
 
 export async function createTodo(
-  createTodoRequest: CreateTodoRequest,
-  userId: string
+  userId: string,
+  createTodoRequest: CreateTodoRequest
 ): Promise<TodoItem> {
   logger.info('Creating new Todo item', {
-    todo: createTodoRequest,
-    userId
+    userId,
+    todo: createTodoRequest
   })
 
   const todoId = uuid.v4()
@@ -33,4 +35,32 @@ export async function createTodo(
     attachmentUrl: null,
     ...createTodoRequest
   })
+}
+
+export async function updateTodo(
+  userId: string,
+  todoId: string,
+  updateTodoRequest: UpdateTodoRequest
+) {
+  logger.info('Updating Todo item', {
+    userId,
+    todoId,
+    todo: updateTodoRequest
+  })
+
+  const item = await todoAccess.getTodoItem(todoId)
+
+  if (!item) {
+    throw new Error('Item not found')
+  }
+
+  if (item.userId !== userId) {
+    logger.error('User does not have permission to delete a todo', {
+      userId,
+      todoId
+    })
+    throw new Error('You are not authorized to update this item')
+  }
+
+  await todoAccess.updateTodoItem(todoId, updateTodoRequest as TodoUpdate)
 }
