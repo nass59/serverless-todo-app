@@ -8,6 +8,12 @@ import { createLogger } from '../utils/logger'
 const todoAccess = new TodoAccess()
 const logger = createLogger('todos')
 
+export async function getTodos(userId: string): Promise<TodoItem[]> {
+  logger.info('Getting all items for an user', { userId })
+
+  return await todoAccess.getTodoItems(userId)
+}
+
 export async function createTodo(
   createTodoRequest: CreateTodoRequest,
   userId: string
