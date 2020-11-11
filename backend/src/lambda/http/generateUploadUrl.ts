@@ -8,6 +8,7 @@ import {
 } from 'aws-lambda'
 
 import { createLogger } from '../../utils/logger'
+import { getUserId } from '../utils'
 import {
   generateUploadUrl,
   updateAttachmentUrl
@@ -20,7 +21,7 @@ export const handler: APIGatewayProxyHandler = async (
 ): Promise<APIGatewayProxyResult> => {
   logger.info('Processing Generate Upload Url', { event })
 
-  const userId = '123'
+  const userId = getUserId(event)
   const todoId = event.pathParameters.todoId
   const attachmentId = uuid.v4()
 
@@ -30,7 +31,8 @@ export const handler: APIGatewayProxyHandler = async (
   return {
     statusCode: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
     },
     body: JSON.stringify({
       uploadUrl
