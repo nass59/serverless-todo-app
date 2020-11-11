@@ -42,13 +42,14 @@ export async function updateTodo(
   todoId: string,
   updateTodoRequest: UpdateTodoRequest
 ) {
+  const item = await todoAccess.getTodoItem(todoId, userId)
+
   logger.info('Updating Todo item', {
     userId,
     todoId,
-    todo: updateTodoRequest
+    todo: item,
+    changes: updateTodoRequest
   })
-
-  const item = await todoAccess.getTodoItem(todoId)
 
   if (!item) {
     throw new Error('Item not found')
@@ -62,5 +63,5 @@ export async function updateTodo(
     throw new Error('You are not authorized to update this item')
   }
 
-  await todoAccess.updateTodoItem(todoId, updateTodoRequest as TodoUpdate)
+  await todoAccess.updateTodoItem(todoId, item, updateTodoRequest as TodoUpdate)
 }

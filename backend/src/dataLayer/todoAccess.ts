@@ -16,22 +16,29 @@ export class TodoAccess {
     private readonly todoIndex = process.env.TODO_ID_INDEX
   ) {}
 
-  async getTodoItem(todoId: string): Promise<TodoItem> {
+  async getTodoItem(todoId: string, userId: string): Promise<TodoItem> {
     logger.info('Getting todo by id', {
       todoId,
       TableName: this.todosTable
     })
 
-    const result = await this.docClient
-      .get({
+    const data = await this.docClient
+      .query({
         TableName: this.todosTable,
-        Key: {
-          todoId
+        IndexName: this.todoIndex,
+        KeyConditionExpression: 'userId = :userId and todoId = :todoId',
+        ExpressionAttributeValues: {
+          ':userId': userId,
+          ':todoId': todoId
         }
       })
       .promise()
 
-    return result.Item as TodoItem
+    if (data.Items.length === 0) {
+      throw new Error('Item does not exist')
+    }
+
+    return data.Items[0] as TodoItem
   }
 
   async getTodoItems(userId: string) {
@@ -70,18 +77,23 @@ export class TodoAccess {
     return todo
   }
 
-  async updateTodoItem(todoId: string, todoUpdate: TodoUpdate) {
+  async updateTodoItem(todoId: string, item: TodoItem, todoUpdate: TodoUpdate) {
     logger.info('Updating todo', {
       todoId,
       TableName: this.todosTable
     })
 
+    const key = {
+      userId: item.userId,
+      createdAt: item.createdAt
+    }
+
+    logger.info('Updating todo with key', { key })
+
     await this.docClient
       .update({
         TableName: this.todosTable,
-        Key: {
-          todoId
-        },
+        Key: key,
         UpdateExpression: 'set #name = :name, dueDate = :dueDate, done = :done',
         ExpressionAttributeNames: {
           '#name': 'name'
