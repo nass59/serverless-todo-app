@@ -51,9 +51,7 @@ export async function updateTodo(
     changes: updateTodoRequest
   })
 
-  if (!item) {
-    throw new Error('Item not found')
-  }
+  checkUserPermissions(item.userId, userId, todoId)
 
   if (item.userId !== userId) {
     logger.error('User does not have permission to delete a todo', {
@@ -64,4 +62,32 @@ export async function updateTodo(
   }
 
   await todoAccess.updateTodoItem(todoId, item, updateTodoRequest as TodoUpdate)
+}
+
+export async function deleteTodo(userId: string, todoId: string) {
+  const item = await todoAccess.getTodoItem(todoId, userId)
+
+  logger.info('Deleting Todo item', {
+    userId,
+    todoId
+  })
+
+  checkUserPermissions(item.userId, userId, todoId)
+
+  await todoAccess.deleteTodoItem(todoId, userId, item.createdAt)
+}
+
+const checkUserPermissions = (
+  itemUserId: string,
+  userId: string,
+  todoId: string
+) => {
+  if (itemUserId !== userId) {
+    logger.error('User does not have permission to do this action', {
+      itemUserId,
+      userId,
+      todoId
+    })
+    throw new Error('You are not authorized to update this item')
+  }
 }
