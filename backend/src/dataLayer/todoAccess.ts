@@ -123,4 +123,30 @@ export class TodoAccess {
       })
       .promise()
   }
+
+  async updateAttachmentUrl(
+    todoId: string,
+    userId: string,
+    createdAt: string,
+    attachmentUrl: string
+  ) {
+    logger.info('Updating attachment URL for a todo', {
+      todoId,
+      TableName: this.todosTable
+    })
+
+    await this.docClient
+      .update({
+        TableName: this.todosTable,
+        Key: {
+          userId,
+          createdAt
+        },
+        UpdateExpression: 'set attachmentUrl = :attachmentUrl',
+        ExpressionAttributeValues: {
+          ':attachmentUrl': attachmentUrl
+        }
+      })
+      .promise()
+  }
 }
