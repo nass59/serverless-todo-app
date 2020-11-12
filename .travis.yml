@@ -24,5 +24,7 @@ jobs:
         - npm test
         - cd -
       after_success:
+        - cd backend
         - sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY --profile serverless -o
         - sls deploy -v
+        - cd -
