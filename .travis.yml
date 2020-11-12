@@ -5,7 +5,7 @@ node_js:
 jobs:
   include:
     - stage: build
-      if: branch = master
+      if: branch = main
       cache:
         directories:
           - node_modules
