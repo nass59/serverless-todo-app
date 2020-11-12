@@ -20,6 +20,8 @@ jobs:
         - cd -
       script:
         # Run tests
+        - cd backend
         - npm test
+        - cd -
       after_success:
         - echo "ok"
