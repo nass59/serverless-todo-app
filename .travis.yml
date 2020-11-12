@@ -11,22 +11,6 @@ jobs:
           - node_modules
           - backend/node_modules
       install:
-        # Install AWS CLI
-        - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-        - unzip awscliv2.zip
-        - sudo ./aws/install
-        - export PATH=~/bin:$PATH
-
-        # Check if aws CLI is installed
-        - aws --version
-
-        # Create aws dir
-        - mkdir ${HOME}/.aws
-
-        # Add AWS Configs and credentials
-        - echo "$AWS_CONFIG" | base64 --decode > ${HOME}/.aws/config
-        - echo "$AWS_CREDENTIALS" | base64 --decode > ${HOME}/.aws/credentials
-
         # Install Serverless
         - npm install -g serverless
 
